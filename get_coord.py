@@ -3,16 +3,19 @@
 import requests
 
 
-def get_coordinates(place: str) -> dict[str, float]: 
+def get_coordinates(place: str) -> dict[str: float]: 
+    # returns early if place is blank or not str
+    if not place or not place.isalpha():
+        print('Enter a valid place.')
+        return
+
     api_key = str(input('Enter your API KEY here to access the coordinates info (from openweathermap): '))
-
-
     url = f"http://api.openweathermap.org/geo/1.0/direct?q={place}&appid={api_key}"
 
     try:
         response = requests.get(url)
 
-        # For checking the API key
+        # For returning early for invalid API
         if response.status_code == 401:
             print('Enter a valid API key.')
             return
@@ -40,8 +43,11 @@ def get_coordinates(place: str) -> dict[str, float]:
 
 
 if __name__ == '__main__':
-    place = str(input("Enter a place -> "))
+    place = input("Enter a place -> ")
     coordinates_data = get_coordinates(place)
 
-    print("\nThe coordinates of the place are:")
-    print(f"lat: {coordinates_data['lat']}\nlon: {coordinates_data['lon']}\n")
+    while True:
+        if coordinates_data:
+            print("\nThe coordinates of the place are:")
+            print(f"lat: {coordinates_data['lat']}\nlon: {coordinates_data['lon']}\n")
+        break
